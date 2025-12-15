@@ -1,5 +1,45 @@
 from rest_framework import serializers
-from .models import Author,Book,BorrowingRecord
+from .models import Author,Book,BorrowingRecord,UserProfile
+from books.constants import MEMBERSHIP_CHOICES
+
+from rest_framework import serializers
+from django.contrib.auth.models import User
+from .models import UserProfile
+
+class RegisterSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    email = serializers.EmailField(required=False, allow_blank=True)
+    password = serializers.CharField(write_only=True)
+    phone_number = serializers.CharField()
+    address = serializers.CharField(required=False, allow_blank=True)
+    membership_type = serializers.ChoiceField(choices=MEMBERSHIP_CHOICES)
+
+    def create(self, validated_data):
+        
+        user = User.objects.create_user(
+            username=validated_data['username'],
+            email=validated_data.get('email', ''),
+            password=validated_data['password']
+        )
+        
+        profile = UserProfile.objects.create(
+            user=user,
+            phone_number=validated_data['phone_number'],
+            address=validated_data.get('address', ''),
+            membership_type=validated_data['membership_type']
+        )
+        return profile
+
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    username = serializers.ReadOnlyField(source='user.username')
+    email = serializers.ReadOnlyField(source='user.email')
+
+    class Meta:
+        model = UserProfile
+        fields = ['username', 'email', 'phone_number', 'address', 'membership_type']
+
 
 class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
