@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import Author,Book,BorrowingRecord
+from .models import Author,Book,BorrowingRecord, UserProfile
+
 
 class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,11 +25,20 @@ class BookSerializer(serializers.ModelSerializer):
     
 
 class BorrowingRecordSerializer(serializers.ModelSerializer):
-    user = serializers.ReadOnlyField(source='user.user.username')
+    user = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all())
+    user_name = serializers.ReadOnlyField(source='user.user.username')
     book=serializers.PrimaryKeyRelatedField(queryset=Book.objects.all())
     book_title = serializers.ReadOnlyField(source='book.title')
     class Meta:
         model=BorrowingRecord
-        fields=['id','user','book','book_title','borrow_date','due_date','return_date','is_returned']
-        read_only_fields = ['id', 'user', 'borrow_date', 'due_date', 'return_date', 'is_returned']
+        fields=[
+            'id','user', 'user_name',
+            'book','book_title',
+            'borrow_date','due_date',
+            'return_date','is_returned'
+        ]
+        read_only_fields = [
+            'id', 'borrow_date', 'due_date',
+            'return_date', 'is_returned'
+        ]
 
