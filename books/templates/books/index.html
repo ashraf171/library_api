@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Digital Library</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #0077b6;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        main {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        h1 {
+            margin-bottom: 30px;
+            font-size: 2em;
+            text-align: center;
+            color: #023e8a;
+        }
+        .book-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .book-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s;
+        }
+        .book-card:hover {
+            transform: translateY(-5px);
+        }
+        .book-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+        .book-content {
+            padding: 15px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .book-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #0077b6;
+        }
+        .book-author {
+            font-size: 1em;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        .book-genre {
+            font-size: 0.9em;
+            color: #777;
+            margin-bottom: 15px;
+        }
+        .book-availability {
+            font-weight: bold;
+            color: #023e8a;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h2>🏛️ Digital Library Management System</h2>
+    </header>
+
+    <main>
+        <h1>Available Books</h1>
+        <div class="book-list">
+            {% for book in books %}
+            <div class="book-card">
+                {% if book.cover_image %}
+                    <img src="{{ book.cover_image.url }}" alt="{{ book.title }}">
+                {% else %}
+                    <img src="https://via.placeholder.com/300x400?text=No+Cover" alt="{{ book.title }}">
+                {% endif %}
+                <div class="book-content">
+                    <div>
+                        <div class="book-title">{{ book.title }}</div>
+                        <div class="book-author">by {{ book.author.name }}</div>
+                        <div class="book-genre">Genre: {{ book.genre }}</div>
+                    </div>
+                    <div class="book-availability">
+                        Available: {{ book.available_copies }} / {{ book.total_copies }}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p>No books available at the moment.</p>
+            {% endfor %}
+        </div>
+    </main>
+</body>
+</html>

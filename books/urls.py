@@ -5,6 +5,7 @@ from .views import (
     ProfileView,
     BookViewSet,
     BorrowingRecordViewSet,
+    HomePageView
 )
 
 router = DefaultRouter()
@@ -12,7 +13,7 @@ router.register(r'books', BookViewSet, basename='book')
 router.register(r'borrowings', BorrowingRecordViewSet, basename='borrowing')
 
 urlpatterns = [
-    
+    path('', HomePageView.as_view(), name='home'),
     path('register/', RegisterView.as_view(), name='register'),
     path('profile/', ProfileView.as_view(), name='profile'),
 

@@ -6,7 +6,7 @@ from rest_framework.decorators import action
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django.shortcuts import get_object_or_404
 from django.db import transaction
-
+from django.views.generic import TemplateView
 from .models import Author, Book, BorrowingRecord, UserProfile
 from .serializers import (
     AuthorSerializer,
@@ -33,7 +33,10 @@ class ProfileView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        profile = request.user.profile
+        try:
+            profile = request.user.profile
+        except UserProfile.DoesNotExist:
+            return Response({"detail": "Profile not found"}, status=404)
         serializer = UserProfileSerializer(profile)
         return Response(serializer.data)
 
@@ -87,3 +90,12 @@ class BorrowingRecordViewSet(viewsets.ModelViewSet):
         borrow_record.return_book()
         serializer = self.get_serializer(borrow_record)
         return Response(serializer.data)
+
+
+class HomePageView(TemplateView):
+    template_name = "books/index.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['books'] = Book.objects.all()
+        return context

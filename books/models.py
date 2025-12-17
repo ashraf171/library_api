@@ -5,9 +5,20 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.utils import timezone
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from books.constants import MEMBERSHIP_CHOICES, GENRE_CHOICES
 
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(
+            user=instance, 
+            phone_number="0000000000", 
+            membership_type="basic"
+        )
 
 def validate_year_not_in_future(value):
     current_year = date.today().year

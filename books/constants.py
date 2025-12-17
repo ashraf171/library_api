@@ -1,9 +1,9 @@
 
 
 MEMBERSHIP_CHOICES = [
-    ('REGULAR', 'Regular'),
-    ('PREMIUM', 'Premium'),
-    ('STAFF', 'Staff'),
+    ('REGULAR', 'regular'),
+    ('PREMIUM', 'premium'),
+    ('STAFF', 'staff'),
 ]
 
 
