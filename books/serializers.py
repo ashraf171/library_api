@@ -9,10 +9,17 @@ class RegisterSerializer(serializers.Serializer):
     username = serializers.CharField()
     email = serializers.EmailField(required=False, allow_blank=True)
     password = serializers.CharField(write_only=True)
-    phone_number = serializers.CharField()
+    phone_number = serializers.CharField(required=True)
     address = serializers.CharField(required=False, allow_blank=True)
     membership_type = serializers.ChoiceField(choices=MEMBERSHIP_CHOICES)
 
+    def validate_phone_number(self, value):
+        if UserProfile.objects.filter(phone_number=value).exists():
+            raise serializers.ValidationError("This phone number is already registered.")
+        return value
+
+
+    
     def create(self, validated_data):
         user = User.objects.create_user(
             username=validated_data['username'],

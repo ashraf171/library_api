@@ -56,6 +56,15 @@ class BookViewSet(viewsets.ModelViewSet):
             return [AllowAny()]
         return [IsAdminUser()]
 
+class AuthorViewSet(viewsets.ModelViewSet):
+    queryset = Author.objects.all()
+    serializer_class = AuthorSerializer
+
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            return [AllowAny()]  
+        return [IsAdminUser()]   
+
 
 class BorrowingRecordViewSet(viewsets.ModelViewSet):
     queryset = BorrowingRecord.objects.all()

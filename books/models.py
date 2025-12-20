@@ -11,15 +11,6 @@ from django.dispatch import receiver
 from books.constants import MEMBERSHIP_CHOICES, GENRE_CHOICES
 
 
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        UserProfile.objects.create(
-            user=instance, 
-            phone_number="0000000000", 
-            membership_type="basic"
-        )
-
 def validate_year_not_in_future(value):
     current_year = date.today().year
     if value > current_year:
@@ -125,7 +116,7 @@ class BorrowingRecord(models.Model):
         is_new = self.pk is None
 
         with transaction.atomic():
-            self.full_clean()  # تحقّق دائماً
+            self.full_clean()  
 
             if is_new and not self.due_date:
                 self.due_date = timezone.now() + timedelta(days=14)

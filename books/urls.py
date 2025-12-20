@@ -5,12 +5,14 @@ from .views import (
     ProfileView,
     BookViewSet,
     BorrowingRecordViewSet,
-    HomePageView
+    HomePageView,
+    AuthorViewSet
 )
 
 router = DefaultRouter()
 router.register(r'books', BookViewSet, basename='book')
 router.register(r'borrowings', BorrowingRecordViewSet, basename='borrowing')
+router.register(r'authors', AuthorViewSet, basename='author')
 
 urlpatterns = [
     path('', HomePageView.as_view(), name='home'),
